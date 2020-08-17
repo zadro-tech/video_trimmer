@@ -39,8 +39,7 @@ class HomePage extends StatelessWidget {
               );
               if (file != null) {
                 await _trimmer.loadVideo(videoFile: file);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                   return TrimmerView(_trimmer);
                 }));
               }
@@ -73,9 +72,7 @@ class _TrimmerViewState extends State<TrimmerView> {
 
     String _value;
 
-    await widget._trimmer
-        .saveTrimmedVideo(startValue: _startValue, endValue: _endValue)
-        .then((value) {
+    await widget._trimmer.saveTrimmedVideo(startValue: _startValue, endValue: _endValue).then((value) {
       setState(() {
         _progressVisibility = false;
         _value = value;
@@ -127,7 +124,8 @@ class _TrimmerViewState extends State<TrimmerView> {
                   child: TrimEditor(
                     viewerHeight: 50.0,
                     viewerWidth: MediaQuery.of(context).size.width,
-                    maxVideoLength: Duration(seconds: 10),
+                    maxVideoLength: Duration(seconds: 15),
+                    minVideoLength: Duration(seconds: 10),
                     onChangeStart: (value) {
                       _startValue = value;
                     },
@@ -154,8 +152,7 @@ class _TrimmerViewState extends State<TrimmerView> {
                           color: Colors.white,
                         ),
                   onPressed: () async {
-                    bool playbackState =
-                        await widget._trimmer.videPlaybackControl(
+                    bool playbackState = await widget._trimmer.videPlaybackControl(
                       startValue: _startValue,
                       endValue: _endValue,
                     );
