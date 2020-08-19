@@ -1,102 +1,32 @@
 import 'package:flutter/material.dart';
 
 class TrimEditorPainter extends CustomPainter {
-  /// To define the start offset
   final Offset startPos;
-
-  /// To define the end offset
   final Offset endPos;
-
-  /// To define the horizontal length of the selected video area
   final double scrubberAnimationDx;
-
-  /// For specifying a size to the holder at the
-  /// two ends of the video trimmer area, while it is `idle`.
-  /// By default it is set to `0.5`.
-  final double circleSize;
-
-  /// For specifying the width of the border around
-  /// the trim area. By default it is set to `3`.
   final double borderWidth;
-
-  /// For specifying the width of the video scrubber
   final double scrubberWidth;
-
-  /// For specifying whether to show the scrubber
   final bool showScrubber;
-
-  /// For specifying a color to the border of
-  /// the trim area. By default it is set to `Colors.white`.
   final Color borderPaintColor;
-
-  /// For specifying a color to the circle.
-  /// By default it is set to `Colors.white`
   final Color circlePaintColor;
-
-  /// For specifying a color to the video
-  /// scrubber inside the trim area. By default it is set to
-  /// `Colors.white`.
   final Color scrubberPaintColor;
-
-  /// For drawing the trim editor slider
-  ///
-  /// The required parameters are [startPos], [endPos]
-  /// & [scrubberAnimationDx]
-  ///
-  /// * [startPos] to define the start offset
-  ///
-  ///
-  /// * [endPos] to define the end offset
-  ///
-  ///
-  /// * [scrubberAnimationDx] to define the horizontal length of the
-  /// selected video area
-  ///
-  ///
-  /// The optional parameters are:
-  ///
-  /// * [circleSize] for specifying a size to the holder at the
-  /// two ends of the video trimmer area, while it is `idle`.
-  /// By default it is set to `0.5`.
-  ///
-  ///
-  /// * [borderWidth] for specifying the width of the border around
-  /// the trim area. By default it is set to `3`.
-  ///
-  ///
-  /// * [scrubberWidth] for specifying the width of the video scrubber
-  ///
-  ///
-  /// * [showScrubber] for specifying whether to show the scrubber
-  ///
-  ///
-  /// * [borderPaintColor] for specifying a color to the border of
-  /// the trim area. By default it is set to `Colors.white`.
-  ///
-  ///
-  /// * [circlePaintColor] for specifying a color to the circle.
-  /// By default it is set to `Colors.white`.
-  ///
-  ///
-  /// * [scrubberPaintColor] for specifying a color to the video
-  /// scrubber inside the trim area. By default it is set to
-  /// `Colors.white`.
-  ///
-  TrimEditorPainter({
-    @required this.startPos,
-    @required this.endPos,
-    @required this.scrubberAnimationDx,
-    this.circleSize = 0.5,
-    this.borderWidth = 3,
-    this.scrubberWidth = 1,
-    this.showScrubber = true,
-    this.borderPaintColor = Colors.white,
-    this.circlePaintColor = Colors.white,
-    this.scrubberPaintColor = Colors.white,
-  })  : assert(startPos != null),
+  final double borderRadius;
+  final double smallRectWidth;
+  TrimEditorPainter(
+      {@required this.startPos,
+      @required this.endPos,
+      @required this.scrubberAnimationDx,
+      this.borderWidth = 3,
+      this.scrubberWidth = 1,
+      this.showScrubber = true,
+      this.borderPaintColor = Colors.white,
+      this.circlePaintColor = Colors.white,
+      this.scrubberPaintColor = Colors.white,
+      this.borderRadius = 0,
+      this.smallRectWidth = 5})
+      : assert(startPos != null),
         assert(endPos != null),
         assert(scrubberAnimationDx != null),
-        assert(circleSize != null),
         assert(borderWidth != null),
         assert(scrubberWidth != null),
         assert(showScrubber != null),
@@ -110,13 +40,16 @@ class TrimEditorPainter extends CustomPainter {
       ..color = borderPaintColor
       ..strokeWidth = borderWidth
       ..style = PaintingStyle.stroke
+      ..strokeWidth = 1
       ..strokeCap = StrokeCap.round;
 
-    var circlePaint = Paint()
-      ..color = circlePaintColor
-      ..strokeWidth = 1
-      ..style = PaintingStyle.fill
-      ..strokeCap = StrokeCap.round;
+    var fillerPaint = Paint()
+      ..color = borderPaintColor
+      ..style = PaintingStyle.fill;
+
+    var notSelectedBackgroundPaint = Paint()
+      ..color = Colors.black38
+      ..style = PaintingStyle.fill;
 
     var scrubberPaint = Paint()
       ..color = scrubberPaintColor
@@ -124,7 +57,26 @@ class TrimEditorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    final rect = Rect.fromPoints(startPos, endPos);
+    var whitePaint = Paint()
+      ..strokeWidth = 1.5
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final rect = RRect.fromRectXY(Rect.fromPoints(startPos, endPos), 0, 0);
+    final _leftRRect = RRect.fromLTRBAndCorners(startPos.dx, 0, startPos.dx + smallRectWidth, endPos.dy,
+        topLeft: Radius.circular(borderRadius), bottomLeft: Radius.circular(borderRadius));
+    final _rightRRect = RRect.fromLTRBAndCorners(endPos.dx, 0, endPos.dx - smallRectWidth, endPos.dy,
+        topRight: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius));
+    final _leftInsideRRect = RRect.fromLTRBAndCorners(
+        startPos.dx + smallRectWidth * .4, endPos.dy * .3, startPos.dx + smallRectWidth * .6, endPos.dy * .7,
+        topLeft: Radius.circular(1), bottomLeft: Radius.circular(0));
+    final _rightInsideRRect = RRect.fromLTRBAndCorners(
+        endPos.dx - smallRectWidth * .4, endPos.dy * .3, endPos.dx - smallRectWidth * .6, endPos.dy * .7,
+        topRight: Radius.circular(1), bottomRight: Radius.circular(0));
+
+    final _leftBackgroundRect = Rect.fromLTRB(0, 0, startPos.dx + smallRectWidth, endPos.dy);
+    final _rightBackgroundRect = Rect.fromLTRB(size.width, 0, endPos.dx - smallRectWidth, endPos.dy);
 
     if (showScrubber) {
       if (scrubberAnimationDx.toInt() > startPos.dx.toInt()) {
@@ -136,9 +88,13 @@ class TrimEditorPainter extends CustomPainter {
       }
     }
 
-    canvas.drawRect(rect, borderPaint);
-    canvas.drawCircle(startPos + Offset(0, endPos.dy / 2), circleSize, circlePaint);
-    canvas.drawCircle(endPos + Offset(0, -endPos.dy / 2), circleSize, circlePaint);
+    canvas.drawRect(_leftBackgroundRect, notSelectedBackgroundPaint);
+    canvas.drawRect(_rightBackgroundRect, notSelectedBackgroundPaint);
+    canvas.drawRRect(rect, borderPaint);
+    canvas.drawRRect(_leftRRect, fillerPaint);
+    canvas.drawRRect(_rightRRect, fillerPaint);
+    canvas.drawRRect(_leftInsideRRect, whitePaint);
+    canvas.drawRRect(_rightInsideRRect, whitePaint);
   }
 
   @override
