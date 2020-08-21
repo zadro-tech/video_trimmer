@@ -67,8 +67,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
   int _numberOfThumbnails = 0; //生成缩略图的张数
 
-  double maxLengthPixels;
-  double minLengthPixels;
+  double _minLengthPixels;
 
   double _start; //左边滑块的位置
   double _end; //右边滑块的位置
@@ -88,6 +87,8 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   double _thumbnailWidgetWidth; //缩略图的总宽度
 
   double _maxRegion; //滑块之间的最大距离
+
+  double _fraction;
 
   Future<void> _initializeVideoController() async {
     if (_videoFile != null) {
@@ -159,18 +160,21 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
     controller.addListener(() {
       setState(() {
-        double x = controller.offset / _thumbnailWidgetWidth;
-        _videoStartPos = _videoDuration * (_start - _arrivedLeft) / _thumbnailWidgetWidth + _videoDuration * x;
-        _videoEndPos = _videoDuration * (_end + controller.offset - (_arrivedRight - _end)) / _thumbnailWidgetWidth;
+        _videoStartPos = (_start - _arrivedLeft + controller.offset) * _fraction;
+
+        _videoEndPos = (_end - _arrivedLeft + controller.offset) * _fraction;
       });
     });
 
-    _maxRegion = widget.viewerWidth * 0.8;
+    _maxRegion = widget.viewerWidth * 0.6;
+    _arrivedLeft = _start = widget.viewerWidth * 0.2;
+    _arrivedRight = _end = widget.viewerWidth * 0.8;
+
+    _fraction = widget.maxDuration.inMilliseconds / _maxRegion;
 
     _videoFile = Trimmer.currentVideoFile;
 
-    _arrivedLeft = _start = widget.viewerWidth * 0.2;
-    _arrivedRight = _end = widget.viewerWidth * 0.8;
+    _minLengthPixels = (widget.minDuration.inMilliseconds / widget.maxDuration.inMilliseconds) * _maxRegion;
 
     _initializeVideoController();
 
@@ -207,6 +211,10 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  String formatTime(String input) {
+    return input.substring(0, input.length - 3);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -222,11 +230,15 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Text(
-                        Duration(milliseconds: _videoStartPos.toInt()).toString().split('.')[0],
+                        formatTime(Duration(milliseconds: _videoStartPos.toInt()).toString()),
                         style: widget.durationTextStyle,
                       ),
                       Text(
-                        Duration(milliseconds: _videoEndPos.toInt()).toString().split('.')[0],
+                        formatTime(Duration(milliseconds: (_videoEndPos - _videoStartPos).toInt()).toString()),
+                        style: widget.durationTextStyle,
+                      ),
+                      Text(
+                        formatTime(Duration(milliseconds: _videoEndPos.toInt()).toString()),
                         style: widget.durationTextStyle,
                       ),
                     ],
@@ -278,14 +290,11 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
           return;
         }
 
+        if (_end - _start - details.delta.dx < _minLengthPixels) return;
+
         setState(() {
           _start = _start + details.delta.dx;
-          print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=' +
-              _start.toString());
-          print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=' +
-              _arrivedLeft.toString());
-          double x = (_start - _arrivedLeft) / _thumbnailWidgetWidth;
-          _videoStartPos = _videoDuration * x;
+          _videoStartPos = _fraction * (_start - _arrivedLeft);
         });
       },
       child: current,
@@ -306,15 +315,17 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         if (_end + details.delta.dx > _arrivedRight) {
           setState(() {
             _end = _arrivedRight;
+            _videoEndPos = _fraction * (_end - _arrivedLeft);
           });
 
           return;
         }
 
+        if (_end - _start + details.delta.dx < _minLengthPixels) return;
+
         setState(() {
           _end = _end + details.delta.dx;
-
-          _videoEndPos = _videoDuration * (_end + details.localPosition.dx) / _thumbnailWidgetWidth;
+          _videoEndPos = _fraction * (_end - _arrivedLeft);
         });
       },
       child: current,
