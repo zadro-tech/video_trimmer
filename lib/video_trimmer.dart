@@ -170,7 +170,7 @@ class Trimmer {
     String _command;
 
     // Formatting Date and Time
-    String dateTime = DateFormat.yMMMd().addPattern('-').add_Hms().format(DateTime.now()).toString();
+    String dateTime = DateFormat('yyyy-MMdd-HHmmss').format(DateTime.now()).toString();
 
     // String _resultString;
     String _outputPath;
@@ -185,25 +185,15 @@ class Trimmer {
     }
 
     if (videoFileName == null) {
-      videoFileName = "${_videoName}_trimmed:$formattedDateTime";
+      videoFileName = "${_videoName}_trimmed_$formattedDateTime";
     }
 
     videoFileName = videoFileName.replaceAll(' ', '_');
 
-    String path = await _createFolderInAppDocDir(
-      videoFolderName,
-      storageDir,
-    ).whenComplete(
-      () => print("Retrieved Trimmer folder"),
-    );
+    String path = await _createFolderInAppDocDir(videoFolderName, storageDir);
 
     Duration startPoint = Duration(milliseconds: startValue.toInt());
     Duration endPoint = Duration(milliseconds: endValue.toInt());
-
-    // Checking the start and end point strings
-    print("Start: ${startPoint.toString()} & End: ${endPoint.toString()}");
-
-    print(path);
 
     if (outputFormat == null) {
       outputFormat = FileFormat.mp4;
@@ -241,14 +231,9 @@ class Trimmer {
 
     _command += '"$_outputPath"';
 
-    await _flutterFFmpeg.execute(_command).whenComplete(() {
-      print('Got value');
-      debugPrint('Video successfuly saved');
-      // _resultString = 'Video successfuly saved';
-    }).catchError((error) {
+    print('ffmpeg command: ' + _command);
+    await _flutterFFmpeg.execute(_command).whenComplete(() {}).catchError((error) {
       print('Error');
-      // _resultString = 'Couldn\'t save the video';
-      debugPrint('Couldn\'t save the video');
     });
 
     return _outputPath;

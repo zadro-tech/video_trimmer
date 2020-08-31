@@ -233,7 +233,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  String formatTime(Duration duration) {
+  Duration _formatTime(Duration duration) {
     String str = duration.toString();
 
     int p = int.parse(str.split('.')[1].substring(0, 1));
@@ -242,7 +242,19 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
     if (p >= 5) seconds = seconds + 1;
 
-    return Duration(seconds: seconds).toString().split('.')[0];
+    return Duration(seconds: seconds);
+  }
+
+  String _showTime(String type) {
+    Duration _sd = _formatTime(Duration(milliseconds: _videoStartPos.toInt()));
+    Duration _ed = _formatTime(Duration(milliseconds: _videoEndPos.toInt()));
+    Duration _id = _ed - _sd;
+
+    if (type == 'start') return _sd.toString().split('.')[0];
+    if (type == 'end') return _ed.toString().split('.')[0];
+    if (type == 'duration') return _id.toString().split('.')[0];
+
+    return '';
   }
 
   @override
@@ -260,15 +272,15 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Text(
-                        formatTime(Duration(milliseconds: _videoStartPos.toInt())),
+                        _showTime('start'),
                         style: widget.durationTextStyle,
                       ),
                       Text(
-                        formatTime(Duration(milliseconds: (_videoEndPos - _videoStartPos).toInt())),
+                        _showTime('duration'),
                         style: widget.durationTextStyle,
                       ),
                       Text(
-                        formatTime(Duration(milliseconds: _videoEndPos.toInt())),
+                        _showTime('end'),
                         style: widget.durationTextStyle,
                       ),
                     ],
@@ -387,7 +399,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         if (_end + details.delta.dx > _arrivedRight) {
           setState(() {
             _end = _arrivedRight;
-            _videoEndPos = _fraction * (_end - _arrivedLeft);
+            _videoEndPos = _fraction * (_end + _offset + -_arrivedLeft);
           });
 
           return;
@@ -403,7 +415,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         });
 
         await videoPlayerController.pause();
-        await videoPlayerController.seekTo(Duration(milliseconds: _videoEndPos.toInt()));
+        await videoPlayerController.seekTo(Duration(milliseconds: _videoStartPos.toInt()));
 
         _linearTween.end = _end;
         _animationController.duration = Duration(milliseconds: (_videoEndPos - _videoStartPos).toInt());
