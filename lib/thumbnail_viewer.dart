@@ -7,7 +7,7 @@ class ThumbnailViewer extends StatelessWidget {
   final videoFile;
   final videoDuration;
   final thumbnailHeight;
-  final fit;
+  final thumbnailWidth;
   final int numberOfThumbnails;
   final int quality;
   final double startSpace;
@@ -20,8 +20,8 @@ class ThumbnailViewer extends StatelessWidget {
     @required this.videoFile,
     @required this.videoDuration,
     @required this.thumbnailHeight,
+    @required this.thumbnailWidth,
     @required this.numberOfThumbnails,
-    @required this.fit,
     @required this.startSpace,
     @required this.endSpace,
     @required this.controller,
@@ -69,10 +69,10 @@ class ThumbnailViewer extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                   height: thumbnailHeight,
-                  //width: thumbnailHeight,
+                  width: thumbnailWidth,
                   child: Image(
                     image: MemoryImage(_imageBytes[index]),
-                    fit: fit,
+                    fit: thumbnailWidth != null ? BoxFit.fill : BoxFit.fitHeight,
                   ),
                 );
               });
