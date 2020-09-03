@@ -239,6 +239,10 @@ class Trimmer {
     return _outputPath;
   }
 
+  Future cancel() async {
+    await _flutterFFmpeg.cancel();
+  }
+
   /// For getting the video controller state, to know whether the
   /// video is playing or paused currently.
   ///
