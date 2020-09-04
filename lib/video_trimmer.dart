@@ -232,9 +232,7 @@ class Trimmer {
     _command += '"$_outputPath"';
 
     print('ffmpeg command: ' + _command);
-    await _flutterFFmpeg.execute(_command).whenComplete(() {}).catchError((error) {
-      print('Error');
-    });
+    await _flutterFFmpeg.execute(_command);
 
     return _outputPath;
   }
