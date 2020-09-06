@@ -133,8 +133,8 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
       widget.onChangeEnd(_videoEndPos);
 
       //默认maxDuration对应10张缩略图
-      _numberOfThumbnails = (_videoDuration ~/ widget.maxDuration.inMilliseconds) * 10;
-      double _thumbnailWidth;
+      _numberOfThumbnails = ((_videoDuration / widget.maxDuration.inMilliseconds) * 10).toInt();
+      double _thumbnailWidth = _maxRegion / 10;
 
       if (_numberOfThumbnails <= 10) //上传的视频时长不大于最大时长
       {

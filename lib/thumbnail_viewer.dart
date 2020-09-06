@@ -72,7 +72,7 @@ class ThumbnailViewer extends StatelessWidget {
                   width: thumbnailWidth,
                   child: Image(
                     image: MemoryImage(_imageBytes[index]),
-                    fit: thumbnailWidth != null ? BoxFit.fill : BoxFit.fitHeight,
+                    fit: BoxFit.cover,
                   ),
                 );
               });
