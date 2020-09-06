@@ -72,7 +72,15 @@ class _TrimmerViewState extends State<TrimmerView> {
 
     String _value;
 
-    await widget._trimmer.saveTrimmedVideo(startValue: _startValue, endValue: _endValue).then((value) {
+    await widget._trimmer
+        .saveTrimmedVideo(
+      startValue: _startValue,
+      endValue: _endValue,
+      onProgress: (progress) {
+        print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=' + progress.toString());
+      },
+    )
+        .then((value) {
       setState(() {
         _progressVisibility = false;
         _value = value;

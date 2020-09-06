@@ -22,6 +22,7 @@ class Trimmer {
   static File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
+  final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
 
   /// Loads a video using the path provided.
   ///
@@ -163,6 +164,7 @@ class Trimmer {
     String videoFolderName,
     String videoFileName,
     StorageDir storageDir,
+    Function(double progress) onProgress,
   }) async {
     final String _videoPath = currentVideoFile.path;
     final String _videoName = basename(_videoPath).split('.')[0];
@@ -177,8 +179,7 @@ class Trimmer {
     String _outputFormatString;
     String formattedDateTime = dateTime.replaceAll(' ', '');
 
-    print("DateTime: $dateTime");
-    print("Formatted: $formattedDateTime");
+    _flutterFFmpegConfig.resetStatistics();
 
     if (videoFolderName == null) {
       videoFolderName = "Trimmer";
@@ -230,6 +231,14 @@ class Trimmer {
     _outputPath = '$path$videoFileName$_outputFormatString';
 
     _command += '"$_outputPath"';
+
+    _flutterFFmpegConfig
+        .enableStatisticsCallback((time, size, bitrate, speed, videoFrameNumber, videoQuality, videoFps) {
+      if (onProgress == null) return;
+      double p = time / (endValue - startValue);
+
+      onProgress(p);
+    });
 
     print('ffmpeg command: ' + _command);
     int ret = await _flutterFFmpeg.execute(_command);
