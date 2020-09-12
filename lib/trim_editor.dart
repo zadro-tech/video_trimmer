@@ -314,7 +314,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
               top: 0,
               bottom: 0,
               child: Container(
-                width: 1,
+                width: 2,
                 color: _scrubberAnimation.value <= (_start + _sliderLength + 1)
                     ? Colors.transparent
                     : videoPlayerController.value.isPlaying ? Colors.yellow : Colors.yellow,

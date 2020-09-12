@@ -1,27 +1,25 @@
-<a href="https://github.com/Solido/awesome-flutter">
-   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
-</a>
-<a href="https://pub.dev/packages/video_trimmer">
-  <img alt="Pub Version" src="https://img.shields.io/pub/v/video_trimmer?style=flat-square">
-</a>
-<a href="https://github.com/sbis04/video_trimmer/stargazers">
-  <img alt="GitHub stars" src="https://img.shields.io/github/stars/sbis04/video_trimmer?style=flat-square">
-</a>
 <a href="https://github.com/sbis04/video_trimmer/blob/master/LICENSE">
   <img alt="GitHub license" src="https://img.shields.io/github/license/sbis04/video_trimmer?style=flat-square">
 </a>
 
-<p align="center">
-  <img src="https://github.com/sbis04/video_trimmer/raw/master/screenshots/cover.png" alt="Video Trimmer" />
-</p>
+# A Flutter package for trimming videos
 
-<h4 align="center">A Flutter package for trimming videos</h4>
+Forked from https://github.com/sbis04/video_trimmer v0.2.7
 
-### Features
+### Additional Features
 
-* Customizable video trimmer
-* Video playback control
-* Retrieving and storing video file
+- Move whole video to select range
+- Show duration selected
+- Can limit video min duration
+- Can pass through additional ffmpeg paramters for custom needs
+- Transcoding to mp4 by default instead of `-c:a copy -c:v copy` in ffmpeg
+- Minor bug fixes and UI tweaks
+
+### Original Features
+
+- Customizable video trimmer
+- Video playback control
+- Retrieving and storing video file
 
 Also, supports conversion to **GIF**.
 
@@ -37,36 +35,32 @@ Also, supports conversion to **GIF**.
   <img src="https://github.com/sbis04/video_trimmer/raw/master/screenshots/trimmer.png" alt="Trimmer"/>
 </p>
 
-<h4 align="center">CUSTOMIZABLE VIDEO EDITOR</h4>
-
-<p align="center">
-  <img src="https://github.com/sbis04/video_trimmer/raw/master/screenshots/trim_editor.gif" alt="Trim Editor" />
-</p>
-
 ## Usage
 
-* Add the dependency `video_trimmer` to your **pubspec.yaml** file.
+- Add the dependency `video_trimmer` to your **pubspec.yaml** file.
 
 ### Android
 
-* Go to `<project root>/android/app/build.gradle` and set the proper `minSdkVersion`, **24** for **Main Release** or **16** for **LTS Release**. 
-  
+- Go to `<project root>/android/app/build.gradle` and set the proper `minSdkVersion`, **24** for **Main Release** or **16** for **LTS Release**.
+
   > Refer to the [FFmpeg Release](#ffmpeg-release) section.
 
-   ```gradle
-   minSdkVersion <version>
-   ```
-* Go to `<project root>/android/build.gradle` and add the following line:
+  ```gradle
+  minSdkVersion <version>
+  ```
 
-   ```gradle
-   ext.flutterFFmpegPackage = '<package name>'
-   ```
+- Go to `<project root>/android/build.gradle` and add the following line:
 
-   > Replace the `<package name>` with a proper package name from the [Packages List](#packages-list) section.
+  ```gradle
+  ext.flutterFFmpegPackage = '<package name>'
+  ```
+
+  > Replace the `<package name>` with a proper package name from the [Packages List](#packages-list) section.
 
 ### iOS
 
-* Add the following keys to your **Info.plist** file, located in `<project root>/ios/Runner/Info.plist`:
+- Add the following keys to your **Info.plist** file, located in `<project root>/ios/Runner/Info.plist`:
+
   ```
   <key>NSCameraUsageDescription</key>
   <string>Used to demonstrate image picker plugin</string>
@@ -76,36 +70,35 @@ Also, supports conversion to **GIF**.
   <string>Used to demonstrate image picker plugin</string>
   ```
 
-* Set the platform version in `ios/Podfile`, **12.1** for **Main Release** or **9.3** for **LTS Release**.
-  
+- Set the platform version in `ios/Podfile`, **12.1** for **Main Release** or **9.3** for **LTS Release**.
+
   > Refer to the [FFmpeg Release](#ffmpeg-release) section.
 
-   ```
-   platform :ios, '<version>'
-   ```
+  ```
+  platform :ios, '<version>'
+  ```
 
-* Replace with the following in the `# Plugin Pods` section of the `ios/Podfile`: 
+- Replace with the following in the `# Plugin Pods` section of the `ios/Podfile`:
 
-   ```
-   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
-   # referring to absolute paths on developers' machines.
+  ```
+  # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
+  # referring to absolute paths on developers' machines.
 
-   system('rm -rf .symlinks')
-   system('mkdir -p .symlinks/plugins')
-   plugin_pods = parse_KV_file('../.flutter-plugins')
-   plugin_pods.each do |name, path|
-     symlink = File.join('.symlinks', 'plugins', name)
-     File.symlink(path, symlink)
-     if name == 'flutter_ffmpeg'
-         pod name+'/<package name>', :path => File.join(symlink, 'ios')
-     else
-         pod name, :path => File.join(symlink, 'ios')
-     end
-   end
-   ```
+  system('rm -rf .symlinks')
+  system('mkdir -p .symlinks/plugins')
+  plugin_pods = parse_KV_file('../.flutter-plugins')
+  plugin_pods.each do |name, path|
+    symlink = File.join('.symlinks', 'plugins', name)
+    File.symlink(path, symlink)
+    if name == 'flutter_ffmpeg'
+        pod name+'/<package name>', :path => File.join(symlink, 'ios')
+    else
+        pod name, :path => File.join(symlink, 'ios')
+    end
+  end
+  ```
 
-   > Replace the `<package name>` with a proper package name from the [Packages List](#packages-list) section.
-
+  > Replace the `<package name>` with a proper package name from the [Packages List](#packages-list) section.
 
 ### FFmpeg Release
 
@@ -157,16 +150,16 @@ In reference to the releases specified in the [flutter_ffmpeg](https://pub.dev/p
 
 The following **FFmpeg Packages** List is in reference to the [flutter_ffmpeg](https://pub.dev/packages/flutter_ffmpeg) package.
 
-| Package | Main Release | LTS Release |
-| :----: | :----: | :----: |
-| min | min  | min-lts |
-| min-gpl | min-gpl | min-gpl-lts |
-| https | https | https-lts |
-| https-gpl | https-gpl | https-gpl-lts |
-| audio | audio | audio-lts |
-| video | video | video-lts |
-| full | full | full-lts |
-| full-gpl | full-gpl | full-gpl-lts |
+|  Package  | Main Release |  LTS Release  |
+| :-------: | :----------: | :-----------: |
+|    min    |     min      |    min-lts    |
+|  min-gpl  |   min-gpl    |  min-gpl-lts  |
+|   https   |    https     |   https-lts   |
+| https-gpl |  https-gpl   | https-gpl-lts |
+|   audio   |    audio     |   audio-lts   |
+|   video   |    video     |   video-lts   |
+|   full    |     full     |   full-lts    |
+| full-gpl  |   full-gpl   | full-gpl-lts  |
 
 ## Functionalities
 
@@ -191,7 +184,7 @@ await _trimmer
 });
 ```
 
-### Video playback state 
+### Video playback state
 
 Returns the video playback state. If **true** then the video is playing, otherwise it is paused.
 
@@ -204,7 +197,7 @@ await _trimmer.videPlaybackControl(
 
 ### Advanced Command
 
-You can use an advanced **FFmpeg** command if you require more customization. Just define your FFmpeg command using the `ffmpegCommand` property and set an output video format using `customVideoFormat`. 
+You can use an advanced **FFmpeg** command if you require more customization. Just define your FFmpeg command using the `ffmpegCommand` property and set an output video format using `customVideoFormat`.
 
 Refer to the [Official FFmpeg Documentation](https://ffmpeg.org/documentation.html) for more information.
 
