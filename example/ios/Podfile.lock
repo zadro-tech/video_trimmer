@@ -35,12 +35,9 @@ PODS:
     - Flutter
   - FLAnimatedImage (1.0.12)
   - Flutter (1.0.0)
-  - flutter_ffmpeg (0.2.10):
+  - flutter_ffmpeg/min-gpl-lts (0.2.10):
     - Flutter
-    - flutter_ffmpeg/https (= 0.2.10)
-  - flutter_ffmpeg/https (0.2.10):
-    - Flutter
-    - mobile-ffmpeg-https (= 4.3.1)
+    - mobile-ffmpeg-min-gpl (= 4.3.1.LTS)
   - image_picker (0.0.1):
     - Flutter
   - libwebp (1.1.0):
@@ -52,7 +49,7 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
-  - mobile-ffmpeg-https (4.3.1)
+  - mobile-ffmpeg-min-gpl (4.3.1.LTS)
   - path_provider (0.0.1):
     - Flutter
   - SDWebImage (5.7.3):
@@ -70,7 +67,7 @@ PODS:
 DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
-  - flutter_ffmpeg (from `.symlinks/plugins/flutter_ffmpeg/ios`)
+  - flutter_ffmpeg/min-gpl-lts (from `.symlinks/plugins/flutter_ffmpeg/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -82,7 +79,7 @@ SPEC REPOS:
     - DKPhotoGallery
     - FLAnimatedImage
     - libwebp
-    - mobile-ffmpeg-https
+    - mobile-ffmpeg-min-gpl
     - SDWebImage
     - SDWebImageFLPlugin
 
@@ -111,13 +108,13 @@ SPEC CHECKSUMS:
   flutter_ffmpeg: cf0a6941ef67e88248c998cc3e34f8acb0b4e454
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  mobile-ffmpeg-https: c4a3c255163ddb1abc4b4dfc613c2d885f8c46eb
+  mobile-ffmpeg-min-gpl: 873aefca7f7de141d16907413fb2b505a7e5cdb4
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
   SDWebImageFLPlugin: 6c2295fb1242d44467c6c87dc5db6b0a13228fd8
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
 
-PODFILE CHECKSUM: 1506cf7ef05944574c7b7b8fa334afa589040c32
+PODFILE CHECKSUM: 0211fffea992ea9fde681d8b51160ae0b8013337
 
 COCOAPODS: 1.9.3
