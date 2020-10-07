@@ -35,6 +35,8 @@ class Trimmer {
         TrimEditor(
           viewerHeight: 50,
           viewerWidth: 50.0 * 8,
+          maxDuration: Duration(seconds: 30),
+          minDuration: Duration(seconds: 5),
           // currentVideoFile: currentVideoFile,
         );
       });
@@ -232,10 +234,10 @@ class Trimmer {
 
     _command += '"$_outputPath"';
 
-    _flutterFFmpegConfig
-        .enableStatisticsCallback((time, size, bitrate, speed, videoFrameNumber, videoQuality, videoFps) {
+    _flutterFFmpegConfig.enableStatisticsCallback((stats) {
       if (onProgress == null) return;
-      double p = time / (endValue - startValue);
+
+      double p = stats.time / (endValue - startValue);
 
       onProgress(p);
     });
