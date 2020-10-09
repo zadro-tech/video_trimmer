@@ -199,6 +199,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     }
 
     _minLengthPixels = (widget.minDuration.inMilliseconds / widget.maxDuration.inMilliseconds) * _maxRegion;
+    if (_videoDuration <= widget.minDuration.inMilliseconds) _minLengthPixels = _maxRegion; //不能拖动
 
     // Defining the tween points
     _linearTween = Tween(begin: _start + _sliderLength, end: _end);
@@ -317,7 +318,9 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                 width: 2,
                 color: _scrubberAnimation.value <= (_start + _sliderLength + 1)
                     ? Colors.transparent
-                    : videoPlayerController.value.isPlaying ? Colors.yellow : Colors.yellow,
+                    : videoPlayerController.value.isPlaying
+                        ? Colors.yellow
+                        : Colors.yellow,
               ),
             ),
           ],
