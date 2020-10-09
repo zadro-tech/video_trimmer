@@ -199,7 +199,8 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     }
 
     _minLengthPixels = (widget.minDuration.inMilliseconds / widget.maxDuration.inMilliseconds) * _maxRegion;
-    if (_videoDuration <= widget.minDuration.inMilliseconds) _minLengthPixels = _maxRegion; //不能拖动
+    if (Duration(milliseconds: _videoDuration).inSeconds <= widget.minDuration.inSeconds)
+      _minLengthPixels = _maxRegion; //不能拖动
 
     // Defining the tween points
     _linearTween = Tween(begin: _start + _sliderLength, end: _end);
