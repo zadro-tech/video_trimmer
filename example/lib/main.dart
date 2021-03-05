@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: Container(
-          child: RaisedButton(
+          child: ElevatedButton(
             child: Text("LOAD VIDEO"),
             onPressed: () async {
               File file = await ImagePicker.pickVideo(
@@ -111,7 +111,7 @@ class _TrimmerViewState extends State<TrimmerView> {
                     backgroundColor: Colors.red,
                   ),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: _progressVisibility
                       ? null
                       : () async {
@@ -147,7 +147,7 @@ class _TrimmerViewState extends State<TrimmerView> {
                     },
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   child: _isPlaying
                       ? Icon(
                           Icons.pause,
